@@ -53,7 +53,19 @@ class _HomeState extends State<Home> {
               children: <Widget>[
                 Text('Save Data'),
                 Padding(padding: const EdgeInsets.all(15),),
-                Text('Saved data goes here')
+                FutureBuilder(
+                  future: readData(),
+                  builder: (BuildContext context, AsyncSnapshot<String> data){
+                      if(data.hasData != null){
+                        return Text(
+                          data.data.toString(),
+                          style: TextStyle(color: Colors.amberAccent),
+                        );
+                      } else {
+                        Text('No data Saved');
+                      }
+                  },
+                )
               ],
             ),
           ),
@@ -70,8 +82,7 @@ class _HomeState extends State<Home> {
 
   Future<File> get _localFile async {
     final path = await _localPath; //umieszczamy tu nasza sciezke
-    return new File(
-        '$path/data.txt'); //zwrot ze sciezka zawierajaca plik data.txt
+    return new File('$path/data.txt'); //zwrot ze sciezka zawierajaca plik data.txt
   }
 
   //write and read from file
