@@ -3,7 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 
-void main() {
+void main() async{
+
+  var data = await readData(); 
+  if(data != null){
+    String message = await readData();
+    print(message);
+  }
+
   runApp(new MaterialApp(
     title: 'Input&Output',
     home: new Home(),
@@ -11,15 +18,50 @@ void main() {
 }
 
 class Home extends StatefulWidget {
+
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  var _enterDataField = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Read and Write'),
+        centerTitle: true,
+        backgroundColor: Colors.brown,
+      ),
+      body: Container(
+        padding: const EdgeInsets.all(15),
+        alignment: Alignment.topCenter,
+        child: ListTile(
+          title: TextField(
+            controller: _enterDataField,
+            decoration: InputDecoration(
+              labelText: 'Write text you want to be read'
+            ),
+          ),
+          subtitle: FlatButton(
+            onPressed: (){
+              //save to file
+              writeData(_enterDataField.text);
+            },
+            child: Column(
+              children: <Widget>[
+                Text('Save Data'),
+                Padding(padding: const EdgeInsets.all(15),),
+                Text('Saved data goes here')
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
+}
 
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -52,4 +94,4 @@ class _HomeState extends State<Home> {
       return "Nothing saved yet";
     }
   }
-}
+
